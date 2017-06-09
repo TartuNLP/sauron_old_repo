@@ -1,6 +1,0 @@
-erakondA = {"lastetoetusi tõsta", "pensione tõsta", "tulumaksu langetada", "kaitsekulutusi tõsta"}
-erakondB = {"muuta kõike varasemat"}
-erakondC = {"sisserännet piirata", "pensione tõsta", "kaitsekulutusi tõsta"}
-erakondD = set()
-erakondE = {"väljarännet piirata", "pensione tõsta", "õpetajate palku tõsta", "kaitsekulutusi tõsta", "alkoholiaktsiisi tõsta"}
-
