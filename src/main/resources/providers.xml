@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<translationProviders>
+
+    <!-- En -> Et -->
+
+    <provider>
+        <name>ENET CPU 1</name>
+        <languagePair>enet</languagePair>
+        <translationDomain>general</translationDomain>
+        <fast>false</fast>
+        <ipAddress>54.154.190.160</ipAddress>
+        <port>12345</port>
+    </provider>
+
+
+    <!-- Et -> En -->
+
+    <provider>
+        <name>ETEN CPU 1</name>
+        <languagePair>eten</languagePair>
+        <translationDomain>general</translationDomain>
+        <fast>false</fast>
+        <ipAddress>54.154.190.160</ipAddress>
+        <port>12346</port>
+    </provider>
+
+</translationProviders>
+
+
