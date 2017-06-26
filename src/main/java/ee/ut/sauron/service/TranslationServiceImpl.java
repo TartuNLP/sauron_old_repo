@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Comparator;
 import java.util.List;
@@ -32,15 +33,15 @@ public class TranslationServiceImpl implements TranslationService {
     public TranslationServiceImpl(AuthService authService) {
         this.authService = authService;
 
-        try {
+        try(InputStream is = TranslationService.class.getResourceAsStream("/providers.xml")) {
+
             Unmarshaller um = JAXBContext.newInstance(GenericProviders.class).createUnmarshaller();
-            InputStream is = TranslationService.class.getResourceAsStream("/providers.xml");
             this.providers = ((GenericProviders) um.unmarshal(is)).getProvider();
 
             log.info("Translation providers:");
             providers.forEach(p -> log.info(p.toString()));
 
-        } catch (JAXBException e) {
+        } catch (JAXBException | IOException e) {
             throw new RuntimeException(e);
         }
     }
