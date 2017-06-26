@@ -1,12 +1,15 @@
 package ee.ut.sauron.service;
 
+import com.google.gson.Gson;
+import ee.ut.sauron.dto.NazgulResponseDTO;
 import ee.ut.sauron.dto.RequestDTO;
 import ee.ut.sauron.dto.ResponseDTO;
 import ee.ut.sauron.exception.IllegalRequestException;
+import ee.ut.sauron.exception.NoProviderException;
+import ee.ut.sauron.exception.TeapotException;
+import ee.ut.sauron.exception.UnauthorizedException;
 import ee.ut.sauron.providers.GenericProviders;
 import ee.ut.sauron.providers.TranslationProvider;
-import ee.ut.sauron.translation.LanguagePair;
-import ee.ut.sauron.translation.TranslationDomain;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,17 +24,17 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class ProviderServiceImpl implements ProviderService {
+public class TranslationServiceImpl implements TranslationService {
     private final AuthService authService;
     private final List<? extends TranslationProvider> providers;
 
     @Autowired
-    public ProviderServiceImpl(AuthService authService) {
+    public TranslationServiceImpl(AuthService authService) {
         this.authService = authService;
 
         try {
             Unmarshaller um = JAXBContext.newInstance(GenericProviders.class).createUnmarshaller();
-            InputStream is = ProviderService.class.getResourceAsStream("/providers.xml");
+            InputStream is = TranslationService.class.getResourceAsStream("/providers.xml");
             this.providers = ((GenericProviders) um.unmarshal(is)).getProvider();
 
             log.info("Translation providers:");
@@ -42,27 +45,38 @@ public class ProviderServiceImpl implements ProviderService {
         }
     }
 
+
     @Override
-    public ResponseDTO handleTranslationQuery(RequestDTO requestDTO, LanguagePair langpair) {
+    public ResponseDTO handleTranslationQuery(RequestDTO requestDTO) {
 
         if (!isConsistent(requestDTO)) {
             throw new IllegalRequestException("Inconsistent request");
         }
 
         if (!authService.isAuthenticated(requestDTO.getAuth())) {
-            throw new IllegalRequestException("Authentication failed");
+            throw new UnauthorizedException("Authentication failed");
         }
 
-        TranslationProvider provider = chooseBestProvider(requestDTO.getFast(), langpair, requestDTO.getDomain());
+        if (requestDTO.getDomain().equals("coffee")) {
+            throw new TeapotException("No coffee for you");
+        }
+
+        TranslationProvider provider =
+                chooseBestProvider(requestDTO.getFast(), requestDTO.getLangpair(), requestDTO.getDomain());
 
         log.info("Chose provider: " + provider.getName());
-        String out = provider.translate(requestDTO.getSrc(), requestDTO.getTok(), requestDTO.getTc());
+        String outRaw = provider.translate(requestDTO.getSrc(), requestDTO.getTok(), requestDTO.getTc());
 
-        return new ResponseDTO(out);
+        NazgulResponseDTO nazgulResponse = new Gson().fromJson(outRaw, NazgulResponseDTO.class);
+
+        return new ResponseDTO(nazgulResponse.getRaw_input(),
+                nazgulResponse.getFinal_trans(),
+                nazgulResponse.getRaw_trans(),
+                nazgulResponse.getWeights());
     }
 
 
-    private TranslationProvider chooseBestProvider(Boolean isFast, LanguagePair langpair, TranslationDomain domain) {
+    private TranslationProvider chooseBestProvider(Boolean isFast, String langpair, String domain) {
 
         // Search for a perfect match
         Optional<? extends TranslationProvider> provider = providers.stream()
@@ -75,14 +89,13 @@ public class ProviderServiceImpl implements ProviderService {
             return provider.get();
         }
 
-
         // Search for a partial match ignoring GPU/CPU preference
         provider = providers.stream()
                 .filter(p -> p.getLang().equals(langpair))
                 .filter(p -> p.getDomain().equals(domain))
                 .min(Comparator.comparingInt(TranslationProvider::load));
 
-        return provider.orElseThrow(() -> new IllegalRequestException("No suitable provider"));
+        return provider.orElseThrow(() -> new NoProviderException("No suitable translation provider found"));
     }
 
 
@@ -94,6 +107,11 @@ public class ProviderServiceImpl implements ProviderService {
 
         if (requestDTO.getSrc() == null) {
             log.warn("Source text is null");
+            return false;
+        }
+
+        if (requestDTO.getLangpair() == null) {
+            log.warn("Language pair is null");
             return false;
         }
 

@@ -1,7 +1,5 @@
 package ee.ut.sauron.providers;
 
-import ee.ut.sauron.translation.LanguagePair;
-import ee.ut.sauron.translation.TranslationDomain;
 import jsock.net.MessageSocket;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +24,8 @@ public class GenericProvider implements TranslationProvider {
     private AtomicInteger load = new AtomicInteger(0);
 
     private String name;
-    private LanguagePair languagePair;
-    private TranslationDomain translationDomain;
+    private String languagePair;
+    private String translationDomain;
 
     private Boolean fast;
 
@@ -41,12 +39,12 @@ public class GenericProvider implements TranslationProvider {
     }
 
     @Override
-    public LanguagePair getLang() {
+    public String getLang() {
         return languagePair;
     }
 
     @Override
-    public TranslationDomain getDomain() {
+    public String getDomain() {
         return translationDomain;
     }
 
@@ -64,21 +62,22 @@ public class GenericProvider implements TranslationProvider {
     public String translate(String src, boolean tok, boolean tc) {
 
         try {
-            this.load.incrementAndGet();
             long t0 = System.currentTimeMillis();
 
-            Socket socket = new Socket(ipAddress, port);
-            MessageSocket messageSocket = new MessageSocket(socket);
+            this.load.incrementAndGet();
+            MessageSocket sock = new MessageSocket(new Socket(ipAddress, port));
 
-            messageSocket.send_msg("ok");
-            messageSocket.recv_msg();
-            messageSocket.send(src.getBytes("UTF-8"));
-            String out = messageSocket.recv_msg();
-            messageSocket.send_msg("EOT");
-            messageSocket.close();
+            sock.sendMessage("ok");
+            sock.receiveRawMessage();
+
+            sock.sendMessage(src);
+            String out = sock.receiveRawMessage();
+
+            sock.sendMessage("EOT");
+            sock.close();
+            this.load.decrementAndGet();
 
             log.info("Out: " + out + String.format(" --- Translation took %s ms", System.currentTimeMillis() - t0));
-            this.load.decrementAndGet();
 
             return out;
 
@@ -88,8 +87,9 @@ public class GenericProvider implements TranslationProvider {
 
     }
 
+    // TODO: 26/06/2017 Can this be removed?
     @XmlElement
-    public void setTranslationDomain(TranslationDomain translationDomain) {
+    public void setTranslationDomain(String translationDomain) {
         this.translationDomain = translationDomain;
     }
 

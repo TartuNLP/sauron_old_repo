@@ -1,15 +1,12 @@
 package ee.ut.sauron.providers;
 
-import ee.ut.sauron.translation.LanguagePair;
-import ee.ut.sauron.translation.TranslationDomain;
-
 public interface TranslationProvider {
 
     String getName();
 
-    LanguagePair getLang();
+    String getLang();
 
-    TranslationDomain getDomain();
+    String getDomain();
 
     Boolean isFast();
 

@@ -7,8 +7,12 @@ import lombok.Data;
 @AllArgsConstructor
 public class ResponseDTO {
 
+    private final String src;
+
     private final String tgt;
 
-    //private final String error;
+    private final String rawTgt;
+
+    private final String alignWeights;
 
 }
