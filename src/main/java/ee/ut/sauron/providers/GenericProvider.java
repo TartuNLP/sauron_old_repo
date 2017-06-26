@@ -4,7 +4,6 @@ import jsock.net.MessageSocket;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import java.io.IOException;
@@ -85,12 +84,6 @@ public class GenericProvider implements TranslationProvider {
             throw new RuntimeException(e);
         }
 
-    }
-
-    // TODO: 26/06/2017 Can this be removed?
-    @XmlElement
-    public void setTranslationDomain(String translationDomain) {
-        this.translationDomain = translationDomain;
     }
 
 }
