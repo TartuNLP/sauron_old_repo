@@ -1,5 +1,7 @@
 package ee.ut.sauron.providers;
 
+import com.google.gson.Gson;
+import ee.ut.sauron.dto.NazgulRequestDTO;
 import jsock.net.MessageSocket;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +60,7 @@ public class GenericProvider implements TranslationProvider {
     }
 
     @Override
-    public String translate(String src, boolean tok, boolean tc) {
+    public String translate(String src, boolean tok, boolean tc, boolean alignWeights) {
 
         try {
             long t0 = System.currentTimeMillis();
@@ -66,17 +68,18 @@ public class GenericProvider implements TranslationProvider {
             this.load.incrementAndGet();
             MessageSocket sock = new MessageSocket(new Socket(ipAddress, port));
 
-            sock.sendMessage("ok");
+            sock.sendMessage("HI");
             sock.receiveRawMessage();
 
-            sock.sendMessage(src);
+            sock.sendMessage(new Gson().toJson(new NazgulRequestDTO(src, tok, tc, alignWeights)));
             String out = sock.receiveRawMessage();
+            log.info(out);
 
             sock.sendMessage("EOT");
             sock.close();
             this.load.decrementAndGet();
 
-            log.info("Out: " + out + String.format(" --- Translation took %s ms", System.currentTimeMillis() - t0));
+            log.info("Translation took {} ms", System.currentTimeMillis() - t0);
 
             return out;
 
@@ -87,3 +90,4 @@ public class GenericProvider implements TranslationProvider {
     }
 
 }
+

@@ -12,6 +12,6 @@ public interface TranslationProvider {
 
     int load();
 
-    String translate(String src, boolean tok, boolean tc);
+    String translate(String src, boolean tok, boolean tc, boolean alignWeights);
 
 }

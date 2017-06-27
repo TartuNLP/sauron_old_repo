@@ -13,8 +13,9 @@ public class RequestDTO {
     private String src;
     private String auth;
 
-    private String domain = "general";
     private Boolean fast = false;
     private Boolean tok = true;
     private Boolean tc = true;
+    private String domain = "general";
+    private Boolean alignweights = false;
 }
