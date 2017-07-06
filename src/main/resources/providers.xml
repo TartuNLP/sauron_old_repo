@@ -9,7 +9,7 @@
         <translationDomain>general</translationDomain>
         <fast>false</fast>
         <ipAddress>54.154.190.160</ipAddress>
-        <port>12345</port>
+        <port>12348</port>
     </provider>
 
 
@@ -21,7 +21,7 @@
         <translationDomain>general</translationDomain>
         <fast>false</fast>
         <ipAddress>54.154.190.160</ipAddress>
-        <port>12346</port>
+        <port>12347</port>
     </provider>
 
 </translationProviders>

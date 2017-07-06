@@ -8,7 +8,11 @@ import lombok.Data;
 public class NazgulRequestDTO {
 
     private String src;
+
     private Boolean tok;
+
     private Boolean tc;
+
+    private Boolean alignweights;
 
 }

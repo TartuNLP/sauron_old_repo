@@ -1,6 +1,5 @@
 package ee.ut.sauron.dto;
 
-import ee.ut.sauron.translation.TranslationDomain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,11 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RequestDTO {
 
+    private String langpair;
     private String src;
     private String auth;
 
-    private TranslationDomain domain = TranslationDomain.general;
     private Boolean fast = false;
     private Boolean tok = true;
     private Boolean tc = true;
+    private String domain = "general";
+    private Boolean alignweights = false;
 }
