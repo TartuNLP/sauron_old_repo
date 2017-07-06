@@ -1,12 +1,11 @@
 package ee.ut.sauron.providers;
 
-import ee.ut.sauron.translation.LanguagePair;
-import ee.ut.sauron.translation.TranslationDomain;
+import com.google.gson.Gson;
+import ee.ut.sauron.dto.NazgulRequestDTO;
 import jsock.net.MessageSocket;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import java.io.IOException;
@@ -26,8 +25,8 @@ public class GenericProvider implements TranslationProvider {
     private AtomicInteger load = new AtomicInteger(0);
 
     private String name;
-    private LanguagePair languagePair;
-    private TranslationDomain translationDomain;
+    private String languagePair;
+    private String translationDomain;
 
     private Boolean fast;
 
@@ -41,12 +40,12 @@ public class GenericProvider implements TranslationProvider {
     }
 
     @Override
-    public LanguagePair getLang() {
+    public String getLang() {
         return languagePair;
     }
 
     @Override
-    public TranslationDomain getDomain() {
+    public String getDomain() {
         return translationDomain;
     }
 
@@ -61,24 +60,26 @@ public class GenericProvider implements TranslationProvider {
     }
 
     @Override
-    public String translate(String src, boolean tok, boolean tc) {
+    public String translate(String src, boolean tok, boolean tc, boolean alignWeights) {
 
         try {
-            this.load.incrementAndGet();
             long t0 = System.currentTimeMillis();
 
-            Socket socket = new Socket(ipAddress, port);
-            MessageSocket messageSocket = new MessageSocket(socket);
+            this.load.incrementAndGet();
+            MessageSocket sock = new MessageSocket(new Socket(ipAddress, port));
 
-            messageSocket.send_msg("ok");
-            messageSocket.recv_msg();
-            messageSocket.send(src.getBytes("UTF-8"));
-            String out = messageSocket.recv_msg();
-            messageSocket.send_msg("EOT");
-            messageSocket.close();
+            sock.sendMessage("HI");
+            sock.receiveRawMessage();
 
-            log.info("Out: " + out + String.format(" --- Translation took %s ms", System.currentTimeMillis() - t0));
+            sock.sendMessage(new Gson().toJson(new NazgulRequestDTO(src, tok, tc, alignWeights)));
+            String out = sock.receiveRawMessage();
+            log.info(out);
+
+            sock.sendMessage("EOT");
+            sock.close();
             this.load.decrementAndGet();
+
+            log.info("Translation took {} ms", System.currentTimeMillis() - t0);
 
             return out;
 
@@ -88,9 +89,5 @@ public class GenericProvider implements TranslationProvider {
 
     }
 
-    @XmlElement
-    public void setTranslationDomain(TranslationDomain translationDomain) {
-        this.translationDomain = translationDomain;
-    }
-
 }
+
