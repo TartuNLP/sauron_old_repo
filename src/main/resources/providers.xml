@@ -8,8 +8,8 @@
         <languagePair>enet</languagePair>
         <translationDomain>general</translationDomain>
         <fast>false</fast>
-        <ipAddress>54.154.190.160</ipAddress>
-        <port>12348</port>
+        <ipAddress>193.40.11.129</ipAddress>
+        <port>12345</port>
     </provider>
 
 
@@ -20,8 +20,8 @@
         <languagePair>eten</languagePair>
         <translationDomain>general</translationDomain>
         <fast>false</fast>
-        <ipAddress>54.154.190.160</ipAddress>
-        <port>12347</port>
+        <ipAddress>193.40.11.129</ipAddress>
+        <port>12346</port>
     </provider>
 
 </translationProviders>

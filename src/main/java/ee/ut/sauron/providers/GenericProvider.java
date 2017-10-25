@@ -72,8 +72,10 @@ public class GenericProvider implements TranslationProvider {
             sock.receiveRawMessage();
 
             sock.sendMessage(new Gson().toJson(new NazgulRequestDTO(src, tok, tc, alignWeights)));
-            String out = sock.receiveRawMessage();
-            log.info(out);
+            String sizeStr = sock.receiveRawMessage();
+            log.info("size: " + sizeStr);
+            int size = Integer.parseInt(sizeStr);
+            String out = sock.receiveRawMessage(size);
 
             sock.sendMessage("EOT");
             sock.close();
