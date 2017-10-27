@@ -1,5 +1,7 @@
 package ee.ut.sauron.controller;
 
+import java.util.Random;
+
 import ee.ut.sauron.dto.RequestDTO;
 import ee.ut.sauron.dto.ResponseDTO;
 import ee.ut.sauron.service.TranslationService;
@@ -21,8 +23,7 @@ public class RestServicesController {
     @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, path = "/v1.0/translate")
     @CrossOrigin
     public ResponseDTO translationQuery(RequestDTO requestDTO) {
-
-        log.info(requestDTO.toString());
+        log.info("REQUEST: {}", requestDTO);
         return translationService.handleTranslationQuery(requestDTO);
     }
 

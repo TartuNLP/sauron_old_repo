@@ -65,10 +65,10 @@ public class TranslationServiceImpl implements TranslationService {
         TranslationProvider provider =
                 chooseBestProvider(requestDTO.getFast(), requestDTO.getLangpair(), requestDTO.getDomain());
 
-        log.info("Chose provider: " + provider.getName());
-        String outRaw = provider.translate(requestDTO.getSrc(), requestDTO.getTok(), requestDTO.getTc(), requestDTO.getAlignweights());
-
-        NazgulResponseDTO nazgulResponse = new Gson().fromJson(outRaw, NazgulResponseDTO.class);
+        log.info("CHOSE PROVIDER: " + provider.getName());
+        NazgulResponseDTO nazgulResponse =
+                provider.translate(requestDTO.getSrc(), requestDTO.getTok(),
+                                   requestDTO.getTc(), requestDTO.getAlignweights());
 
         return new ResponseDTO(nazgulResponse.getRaw_input(),
                 nazgulResponse.getFinal_trans(),

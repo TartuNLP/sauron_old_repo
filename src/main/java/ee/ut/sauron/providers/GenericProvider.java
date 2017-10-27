@@ -2,6 +2,8 @@ package ee.ut.sauron.providers;
 
 import com.google.gson.Gson;
 import ee.ut.sauron.dto.NazgulRequestDTO;
+import ee.ut.sauron.dto.NazgulResponseDTO;
+
 import jsock.net.MessageSocket;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -60,7 +65,7 @@ public class GenericProvider implements TranslationProvider {
     }
 
     @Override
-    public String translate(String src, boolean tok, boolean tc, boolean alignWeights) {
+    public NazgulResponseDTO translate(String src, boolean tok, boolean tc, boolean alignWeights) {
 
         try {
             long t0 = System.currentTimeMillis();
@@ -71,25 +76,47 @@ public class GenericProvider implements TranslationProvider {
             sock.sendMessage("HI");
             sock.receiveRawMessage();
 
-            sock.sendMessage(new Gson().toJson(new NazgulRequestDTO(src, tok, tc, alignWeights)));
-            String sizeStr = sock.receiveRawMessage();
-            log.info("size: " + sizeStr);
-            int size = Integer.parseInt(sizeStr);
-            String out = sock.receiveRawMessage(size);
+            String nazgulIn = new Gson().toJson(new NazgulRequestDTO(src, tok, tc, alignWeights));
+            int msgSize = nazgulIn.getBytes("UTF-8").length;
+
+            if (msgSize > 1024) {
+                String sizeMsg = "msize:" + msgSize;
+                log.info("SENDING SIZE MSG: {}", sizeMsg);
+                sock.sendMessage(sizeMsg);
+                String ok = sock.receiveRawMessage();
+                log.info("NAZGUL RESPONDED: {}", ok);
+            }
+
+            log.info("SENDING REQUEST: {}", nazgulIn);
+            sock.sendMessage(nazgulIn);
+            String res = sock.receiveRawMessage();
+            log.info("NAZGUL RESPONSE: {}", res);
+
+            if (res.startsWith("msize:")) {
+                String responseSizeStr = res.split(":")[1].trim();
+                log.info("MSG SIZE: {}", responseSizeStr);
+                int responseSize = Integer.parseInt(responseSizeStr);
+                sock.sendMessage("OK");
+                res = sock.receiveRawMessage(responseSize);
+                log.info("REAL MESSAGE: {}", res);
+            }
 
             sock.sendMessage("EOT");
             sock.close();
+
             this.load.decrementAndGet();
 
-            log.info("Translation took {} ms", System.currentTimeMillis() - t0);
+            log.info("TRANSLATION TIME: {} ms", System.currentTimeMillis() - t0);
 
-            return out;
+            return new Gson().fromJson(res, NazgulResponseDTO.class);
 
+        } catch (ConnectException e) {
+            log.error("Nazgul {} ({}:{}) failed to connect.", name, ipAddress, port);
+            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
     }
-
 }
 

@@ -1,5 +1,9 @@
 package ee.ut.sauron.providers;
 
+
+import ee.ut.sauron.dto.NazgulResponseDTO;
+
+
 public interface TranslationProvider {
 
     String getName();
@@ -12,6 +16,6 @@ public interface TranslationProvider {
 
     int load();
 
-    String translate(String src, boolean tok, boolean tc, boolean alignWeights);
+    NazgulResponseDTO translate(String src, boolean tok, boolean tc, boolean alignWeights);
 
 }
