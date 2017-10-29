@@ -13,6 +13,7 @@ public class NazgulRequestDTO {
 
     private Boolean tc;
 
-    private Boolean alignweights;
+    private Boolean align_weights;
 
+    private Boolean quality_estimation;
 }

@@ -70,7 +70,7 @@ public class TranslationServiceImpl implements TranslationService {
 
         long nazgulStartTime = System.currentTimeMillis();
         NazgulResponseDTO nazgulResponse = provider.translate(requestDTO.getSrc(), requestDTO.getTok(),
-                requestDTO.getTc(), requestDTO.getAlignweights());
+                requestDTO.getTc(), requestDTO.getAlignweights(), requestDTO.getQualityestimation());
         long nazgulEndTime = System.currentTimeMillis();
 
         ResponseDTO response = new ResponseDTO(nazgulResponse.getRaw_input(), nazgulResponse.getFinal_trans(),

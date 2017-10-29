@@ -18,4 +18,5 @@ public class RequestDTO {
     private Boolean tc = true;
     private String domain = "general";
     private Boolean alignweights = false;
+    private Boolean qualityestimation = false;
 }

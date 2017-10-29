@@ -57,7 +57,8 @@ public class GenericProvider implements TranslationProvider {
     }
 
     @Override
-    public NazgulResponseDTO translate(String src, boolean tok, boolean tc, boolean alignWeights) {
+    public NazgulResponseDTO translate(String src, boolean tok, boolean tc, boolean alignWeights,
+                                       boolean qualityEstimation) {
 
         try {
             this.load.incrementAndGet();
@@ -66,7 +67,7 @@ public class GenericProvider implements TranslationProvider {
             sock.sendMessage("HI");
             sock.receiveRawMessage();
 
-            String nazgulIn = new Gson().toJson(new NazgulRequestDTO(src, tok, tc, alignWeights));
+            String nazgulIn = new Gson().toJson(new NazgulRequestDTO(src, tok, tc, alignWeights, qualityEstimation));
             int msgSize = nazgulIn.getBytes("UTF-8").length;
 
             if (msgSize > 1024) {
