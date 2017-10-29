@@ -1,6 +1,5 @@
 package ee.ut.sauron.service;
 
-import com.google.gson.Gson;
 import ee.ut.sauron.dto.NazgulResponseDTO;
 import ee.ut.sauron.dto.RequestDTO;
 import ee.ut.sauron.dto.ResponseDTO;
@@ -33,7 +32,7 @@ public class TranslationServiceImpl implements TranslationService {
     public TranslationServiceImpl(AuthService authService) {
         this.authService = authService;
 
-        try(InputStream is = TranslationService.class.getResourceAsStream("/providers.xml")) {
+        try (InputStream is = TranslationService.class.getResourceAsStream("/providers.xml")) {
 
             Unmarshaller um = JAXBContext.newInstance(GenericProviders.class).createUnmarshaller();
             this.providers = ((GenericProviders) um.unmarshal(is)).getProvider();
@@ -50,6 +49,9 @@ public class TranslationServiceImpl implements TranslationService {
     @Override
     public ResponseDTO handleTranslationQuery(RequestDTO requestDTO) {
 
+        long requestStartTime = System.currentTimeMillis();
+        log.info("REQUEST: {}", requestDTO);
+
         if (!isConsistent(requestDTO)) {
             throw new IllegalRequestException("Inconsistent request");
         }
@@ -64,16 +66,23 @@ public class TranslationServiceImpl implements TranslationService {
 
         TranslationProvider provider =
                 chooseBestProvider(requestDTO.getFast(), requestDTO.getLangpair(), requestDTO.getDomain());
+        log.info("CHOSE PROVIDER: {} ({}:{})", provider.getName(), provider.getIpAddress(), provider.getPort());
 
-        log.info("CHOSE PROVIDER: " + provider.getName());
-        NazgulResponseDTO nazgulResponse =
-                provider.translate(requestDTO.getSrc(), requestDTO.getTok(),
-                                   requestDTO.getTc(), requestDTO.getAlignweights());
+        long nazgulStartTime = System.currentTimeMillis();
+        NazgulResponseDTO nazgulResponse = provider.translate(requestDTO.getSrc(), requestDTO.getTok(),
+                requestDTO.getTc(), requestDTO.getAlignweights());
+        long nazgulEndTime = System.currentTimeMillis();
 
-        return new ResponseDTO(nazgulResponse.getRaw_input(),
-                nazgulResponse.getFinal_trans(),
-                nazgulResponse.getRaw_trans(),
-                nazgulResponse.getWeights());
+        ResponseDTO response = new ResponseDTO(nazgulResponse.getRaw_input(), nazgulResponse.getFinal_trans(),
+                nazgulResponse.getRaw_trans(), nazgulResponse.getWeights());
+        log.info("RESPONSE: {}", response);
+
+        long requestTime = System.currentTimeMillis() - requestStartTime;
+        long nazgulTime = nazgulEndTime - nazgulStartTime;
+        long sauronTime = requestTime - nazgulTime;
+        log.info("REQUEST COMPLETED IN {} ms (SAURON: {} ms, NAZGUL: {} ms)", requestTime, sauronTime, nazgulTime);
+
+        return response;
     }
 
 

@@ -3,7 +3,6 @@ package ee.ut.sauron.providers;
 import com.google.gson.Gson;
 import ee.ut.sauron.dto.NazgulRequestDTO;
 import ee.ut.sauron.dto.NazgulResponseDTO;
-
 import jsock.net.MessageSocket;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -11,10 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -40,23 +37,18 @@ public class GenericProvider implements TranslationProvider {
 
 
     @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
     public String getLang() {
-        return languagePair;
+        return getLanguagePair();
     }
 
     @Override
     public String getDomain() {
-        return translationDomain;
+        return getTranslationDomain();
     }
 
     @Override
     public Boolean isFast() {
-        return fast;
+        return getFast();
     }
 
     @Override
@@ -68,8 +60,6 @@ public class GenericProvider implements TranslationProvider {
     public NazgulResponseDTO translate(String src, boolean tok, boolean tc, boolean alignWeights) {
 
         try {
-            long t0 = System.currentTimeMillis();
-
             this.load.incrementAndGet();
             MessageSocket sock = new MessageSocket(new Socket(ipAddress, port));
 
@@ -89,16 +79,16 @@ public class GenericProvider implements TranslationProvider {
 
             log.info("SENDING REQUEST: {}", nazgulIn);
             sock.sendMessage(nazgulIn);
-            String res = sock.receiveRawMessage();
-            log.info("NAZGUL RESPONSE: {}", res);
+            String nazgulOut = sock.receiveRawMessage();
+            log.info("NAZGUL RESPONSE: {}", nazgulOut);
 
-            if (res.startsWith("msize:")) {
-                String responseSizeStr = res.split(":")[1].trim();
+            if (nazgulOut.startsWith("msize:")) {
+                String responseSizeStr = nazgulOut.split(":")[1].trim();
                 log.info("MSG SIZE: {}", responseSizeStr);
                 int responseSize = Integer.parseInt(responseSizeStr);
                 sock.sendMessage("OK");
-                res = sock.receiveRawMessage(responseSize);
-                log.info("REAL MESSAGE: {}", res);
+                nazgulOut = sock.receiveRawMessage(responseSize);
+                log.info("REAL MESSAGE: {}", nazgulOut);
             }
 
             sock.sendMessage("EOT");
@@ -106,9 +96,7 @@ public class GenericProvider implements TranslationProvider {
 
             this.load.decrementAndGet();
 
-            log.info("TRANSLATION TIME: {} ms", System.currentTimeMillis() - t0);
-
-            return new Gson().fromJson(res, NazgulResponseDTO.class);
+            return new Gson().fromJson(nazgulOut, NazgulResponseDTO.class);
 
         } catch (ConnectException e) {
             log.error("Nazgul {} ({}:{}) failed to connect.", name, ipAddress, port);

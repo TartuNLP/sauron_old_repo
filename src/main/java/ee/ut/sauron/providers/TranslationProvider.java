@@ -14,6 +14,10 @@ public interface TranslationProvider {
 
     Boolean isFast();
 
+    String getIpAddress();
+
+    int getPort();
+
     int load();
 
     NazgulResponseDTO translate(String src, boolean tok, boolean tc, boolean alignWeights);
