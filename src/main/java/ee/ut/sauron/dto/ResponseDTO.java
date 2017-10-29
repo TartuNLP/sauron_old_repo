@@ -17,4 +17,6 @@ public class ResponseDTO {
 
     private final List<String> alignweights;
 
+    private final String qualityestimation;
+
 }

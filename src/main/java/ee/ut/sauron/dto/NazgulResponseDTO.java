@@ -17,5 +17,5 @@ public class NazgulResponseDTO {
 
     private List<String> weights;
 
-    private Double estimation;
+    private String estimation;
 }
