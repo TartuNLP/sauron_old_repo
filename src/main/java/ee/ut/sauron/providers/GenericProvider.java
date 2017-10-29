@@ -77,7 +77,7 @@ public class GenericProvider implements TranslationProvider {
                 log.info("NAZGUL RESPONDED: {}", ok);
             }
 
-            log.info("SENDING REQUEST: {}", nazgulIn);
+            log.info("NAZGUL REQUEST: {}", nazgulIn);
             sock.sendMessage(nazgulIn);
             String nazgulOut = sock.receiveRawMessage();
             log.info("NAZGUL RESPONSE: {}", nazgulOut);
