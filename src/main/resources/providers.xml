@@ -24,6 +24,24 @@
         <port>12346</port>
     </provider>
 
+    <provider>
+        <name>ETEN GPU 1</name>
+        <languagePair>eten</languagePair>
+        <translationDomain>livesubs</translationDomain>
+        <fast>true</fast>
+        <ipAddress>54.246.252.123</ipAddress>
+        <port>12347</port>
+    </provider>
+
+    <provider>
+        <name>ETEN GPU 2</name>
+        <languagePair>eten</languagePair>
+        <translationDomain>livesubs</translationDomain>
+        <fast>true</fast>
+        <ipAddress>54.194.87.240</ipAddress>
+        <port>12347</port>
+    </provider>
+
 </translationProviders>
 
 
