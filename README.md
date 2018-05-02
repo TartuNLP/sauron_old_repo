@@ -26,8 +26,8 @@ Sauron uses arbitrary variable-length string tokens for authentication. An envir
 
 ## OpenNMT interface
 
-The OpenNMT interface can be enabled by setting the environment variable ```SAURON_OPENNMT_INTERFACE=TRUE```.
-When using SDL Trados OpenNMT plugin to connect to the sauron server, use ```<ip-address>:8080/v1.0/<langpair>``` as the server address and use the 'Client' feature field for your authentication token.
+The OpenNMT interface can be enabled by setting the environment variable ```SAURON_OPENNMT_INTERFACE=TRUE```.  
+When using SDL Trados OpenNMT plugin to connect to the sauron server, use ```<ip-address>:<port>/v1.0/<langpair>``` as the server address and use the 'Client' feature field for your authentication token.
  
 ## Deployment
 
