@@ -18,7 +18,8 @@ import java.util.List;
 public class RestServicesController {
 
     private final TranslationService translationService;
-    private final boolean SAURON_OPENNMT_INTERFACE_ENABLED = System.getenv("SAURON_OPENNMT_INTERFACE_ENABLED").equalsIgnoreCase("TRUE");
+    //private final boolean SAURON_OPENNMT_INTERFACE_ENABLED = System.getenv("SAURON_OPENNMT_INTERFACE_ENABLED").equalsIgnoreCase("TRUE");
+    private final boolean SAURON_OPENNMT_INTERFACE_ENABLED = true;
 
     @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, path = "/v1.0/translate")
     @CrossOrigin
@@ -34,17 +35,12 @@ public class RestServicesController {
         }
 
         RequestDTO request = new RequestDTO();
-        request.setLangpair(langpair);
+        request.setLangpair(langpair.substring(0, 4));
         request.setSrc(requestDTO.get(0).getSrc());
         request.setAuth(requestDTO.get(0).getFeats().get(0));
+	request.setDomain("opennmt");
 
-        //ResponseDTO response = translationQuery(request);
-        ResponseDTO response = new ResponseDTO(
-                Arrays.asList(request.getSrc()),
-                "töötab!",
-                null,
-                null,
-                null);
+        ResponseDTO response = translationQuery(request);
         return new ArrayList<List<OpenNMTReturnDTO>>(Arrays.asList(new ArrayList<>(Arrays.asList(new OpenNMTReturnDTO(response.getTgt())))));
     }
 
