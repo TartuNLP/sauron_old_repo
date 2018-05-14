@@ -70,13 +70,13 @@ public class GenericProvider implements TranslationProvider {
             String nazgulIn = new Gson().toJson(new NazgulRequestDTO(src, tok, tc, alignWeights, qualityEstimation));
             int msgSize = nazgulIn.getBytes("UTF-8").length;
 
-            //if (msgSize > 1024) {
+            if (msgSize > 4096) {
                 String sizeMsg = "msize:" + msgSize;
                 log.info("SENDING SIZE MSG: {}", sizeMsg);
                 sock.sendMessage(sizeMsg);
                 String ok = sock.receiveRawMessage();
                 log.info("NAZGUL RESPONDED: {}", ok);
-            //}
+            }
 
             log.info("NAZGUL REQUEST: {}", nazgulIn);
             sock.sendMessage(nazgulIn);
