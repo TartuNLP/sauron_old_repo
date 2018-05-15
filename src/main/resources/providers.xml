@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <translationProviders>
-    
+
     <provider>
-        <name>ETEN GPU 1</name>
+        <name>ETEN LS</name>
         <languagePair>eten</languagePair>
         <translationDomain>livesubs</translationDomain>
-        <fast>true</fast>
-        <ipAddress>54.229.204.3</ipAddress>
+        <fast>false</fast>
+        <ipAddress>192.168.11.6</ipAddress>
         <port>12347</port>
-    </provider>    
+    </provider>
 
     <provider>
         <name>Grata DEET</name>
@@ -17,7 +17,7 @@
         <fast>false</fast>
         <ipAddress>193.40.11.168</ipAddress>
         <port>12348</port>
-	<opennmt>true</opennmt>
+        <opennmt>true</opennmt>
     </provider>
 
     <provider>
@@ -33,44 +33,24 @@
     <!-- En -> Et -->
 
     <provider>
-        <name>ENET CPU 1</name>
+        <name>ENET LARGE</name>
         <languagePair>enet</languagePair>
         <translationDomain>general</translationDomain>
         <fast>false</fast>
-        <ipAddress>193.40.11.129</ipAddress>
-        <port>12345</port>
+        <ipAddress>192.168.11.6</ipAddress>
+        <port>12349</port>
     </provider>
 
 
     <!-- Et -> En -->
 
     <provider>
-        <name>ETEN CPU 1</name>
+        <name>ETEN LARGE</name>
         <languagePair>eten</languagePair>
         <translationDomain>general</translationDomain>
         <fast>false</fast>
-        <ipAddress>193.40.11.129</ipAddress>
-        <port>12346</port>
-    </provider>
-
-    <provider>
-        <name>ETEN GPU 1</name>
-        <languagePair>eten</languagePair>
-        <translationDomain>livesubs</translationDomain>
-        <fast>true</fast>
-        <ipAddress>54.246.252.123</ipAddress>
-        <port>12347</port>
-    </provider>
-
-    <provider>
-        <name>ETEN GPU 2</name>
-        <languagePair>eten</languagePair>
-        <translationDomain>livesubs</translationDomain>
-        <fast>true</fast>
-        <ipAddress>54.194.87.240</ipAddress>
+        <ipAddress>192.168.11.6</ipAddress>
         <port>12347</port>
     </provider>
 
 </translationProviders>
-
-
