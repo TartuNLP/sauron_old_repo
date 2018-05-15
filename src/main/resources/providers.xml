@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <translationProviders>
+    
+    <provider>
+        <name>ETEN GPU 1</name>
+        <languagePair>eten</languagePair>
+        <translationDomain>livesubs</translationDomain>
+        <fast>true</fast>
+        <ipAddress>54.229.204.3</ipAddress>
+        <port>12347</port>
+    </provider>    
+
+    <provider>
+        <name>Grata DEET</name>
+        <languagePair>deet</languagePair>
+        <translationDomain>opennmt</translationDomain>
+        <fast>false</fast>
+        <ipAddress>193.40.11.168</ipAddress>
+        <port>12348</port>
+	<opennmt>true</opennmt>
+    </provider>
+
+    <provider>
+        <name>Grata ENET</name>
+        <languagePair>enet</languagePair>
+        <translationDomain>opennmt</translationDomain>
+        <fast>false</fast>
+        <ipAddress>193.40.11.168</ipAddress>
+        <port>12349</port>
+        <opennmt>true</opennmt>
+    </provider>
 
     <!-- En -> Et -->
 

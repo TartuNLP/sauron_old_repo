@@ -24,6 +24,10 @@ All the following properties must be specified for each provider:
 
 Sauron uses arbitrary variable-length string tokens for authentication. An environmental variable ```SAURON_ALLOWED_TOKENS``` must be set that contains semicolon-delimited allowed tokens. Each API request's authentication token (parameter ```auth```) is checked against this set of allowed tokens.  
 
+## OpenNMT interface
+
+The OpenNMT interface can be enabled by setting the environment variable ```SAURON_OPENNMT_INTERFACE=TRUE```.  
+When using SDL Trados OpenNMT plugin to connect to the sauron server, use ```<ip-address>:<port>/v1.0/<langpair>``` as the server address and use the 'Client' feature field for your authentication token.
  
 ## Deployment
 
