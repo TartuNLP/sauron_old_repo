@@ -15,7 +15,7 @@
         <languagePair>deet</languagePair>
         <translationDomain>opennmt</translationDomain>
         <fast>false</fast>
-        <ipAddress>193.40.11.168</ipAddress>
+        <ipAddress>192.168.11.10</ipAddress>
         <port>12348</port>
         <opennmt>true</opennmt>
     </provider>
@@ -25,7 +25,7 @@
         <languagePair>enet</languagePair>
         <translationDomain>opennmt</translationDomain>
         <fast>false</fast>
-        <ipAddress>193.40.11.168</ipAddress>
+        <ipAddress>192.168.11.10</ipAddress>
         <port>12349</port>
         <opennmt>true</opennmt>
     </provider>
