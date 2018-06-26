@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SauronApplication {
 
 	public static void main(String[] args) {
+		PersistenceUtil.initPersistence();
 		SpringApplication.run(SauronApplication.class, args);
 	}
 }
