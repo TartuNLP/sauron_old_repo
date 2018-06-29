@@ -53,4 +53,15 @@
         <port>12347</port>
     </provider>
 
+    <!-- De -> En -->
+
+    <provider>
+        <name>FINNOVA</name>
+        <languagePair>deen</languagePair>
+        <translationDomain>general</translationDomain>
+        <fast>false</fast>
+        <ipAddress>192.168.11.5</ipAddress>
+        <port>12347</port>
+    </provider>
+
 </translationProviders>
