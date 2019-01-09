@@ -20,6 +20,6 @@ public interface TranslationProvider {
 
     int load();
 
-    NazgulResponseDTO translate(String src, boolean tok, boolean tc, boolean alignWeights, boolean qualityEstimation);
+    NazgulResponseDTO translate(String src, boolean tok, boolean tc, boolean alignWeights, boolean qualityEstimation, String conf);
 
 }
