@@ -9,10 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RequestDTO {
 
-    private String langpair;
+    private String engine;
     private String src;
     private String auth;
 
+    private String conf = "en,fml";
     private Boolean fast = false;
     private Boolean tok = true;
     private Boolean tc = true;

@@ -29,7 +29,7 @@ public class RestServicesController {
     //private final boolean SAURON_OPENNMT_INTERFACE_ENABLED = System.getenv("SAURON_OPENNMT_INTERFACE_ENABLED").equalsIgnoreCase("TRUE");
     private final boolean SAURON_OPENNMT_INTERFACE_ENABLED = true;
 
-    @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, path = "/v1.0/translate")
+    @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, path = "/v1.1/translate")
     @CrossOrigin
     public ResponseDTO translationQuery(RequestDTO requestDTO, HttpServletRequest httpRequest) {
         return handleRequest(requestDTO, httpRequest);
@@ -47,7 +47,7 @@ public class RestServicesController {
 
         // Convert the OpenNMT DTO into a regular DTO
         RequestDTO request = new RequestDTO();
-        request.setLangpair(langpair.substring(0, 4));
+        request.setEngine(langpair.substring(0, 4));
         request.setSrc(requestDTO.get(0).getSrc());
         request.setAuth(requestDTO.get(0).getFeats().get(0));
 	    request.setDomain("opennmt");

@@ -65,12 +65,12 @@ public class TranslationServiceImpl implements TranslationService {
         }
 
         TranslationProvider provider =
-                chooseBestProvider(requestDTO.getFast(), requestDTO.getLangpair(), requestDTO.getDomain());
+                chooseBestProvider(requestDTO.getFast(), requestDTO.getEngine(), requestDTO.getDomain());
         log.info("CHOSE PROVIDER: {} ({}:{})", provider.getName(), provider.getIpAddress(), provider.getPort());
 
         long nazgulStartTime = System.currentTimeMillis();
         NazgulResponseDTO nazgulResponse = provider.translate(requestDTO.getSrc(), requestDTO.getTok(),
-                requestDTO.getTc(), requestDTO.getAlignweights(), requestDTO.getQualityestimation());
+                requestDTO.getTc(), requestDTO.getAlignweights(), requestDTO.getQualityestimation(), requestDTO.getConf());
         long nazgulEndTime = System.currentTimeMillis();
 
         ResponseDTO response = new ResponseDTO(nazgulResponse.getRaw_input(), nazgulResponse.getFinal_trans(),
@@ -86,12 +86,12 @@ public class TranslationServiceImpl implements TranslationService {
     }
 
 
-    private TranslationProvider chooseBestProvider(Boolean isFast, String langpair, String domain) {
+    private TranslationProvider chooseBestProvider(Boolean isFast, String engine, String domain) {
 
         // Search for a perfect match
         Optional<? extends TranslationProvider> provider = providers.stream()
                 .filter(p -> p.isFast() == isFast)
-                .filter(p -> p.getLang().equals(langpair))
+                .filter(p -> p.getLang().equals(engine))
                 .filter(p -> p.getDomain().equals(domain))
                 .min(Comparator.comparingInt(TranslationProvider::load));
 
@@ -101,7 +101,7 @@ public class TranslationServiceImpl implements TranslationService {
 
         // Search for a partial match ignoring GPU/CPU preference
         provider = providers.stream()
-                .filter(p -> p.getLang().equals(langpair))
+                .filter(p -> p.getLang().equals(engine))
                 .filter(p -> p.getDomain().equals(domain))
                 .min(Comparator.comparingInt(TranslationProvider::load));
 

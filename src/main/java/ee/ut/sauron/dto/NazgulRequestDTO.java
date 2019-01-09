@@ -16,4 +16,6 @@ public class NazgulRequestDTO {
     private Boolean align_weights;
 
     private Boolean quality_estimation;
+	 
+    private String conf;
 }
