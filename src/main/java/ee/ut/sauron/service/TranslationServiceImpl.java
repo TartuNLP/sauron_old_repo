@@ -120,7 +120,7 @@ public class TranslationServiceImpl implements TranslationService {
             return false;
         }
 
-        if (requestDTO.getLangpair() == null) {
+        if (requestDTO.getEngine() == null) {
             log.warn("Language pair is null");
             return false;
         }
